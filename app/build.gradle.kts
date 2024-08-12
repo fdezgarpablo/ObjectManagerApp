@@ -53,6 +53,7 @@ android {
 
 dependencies {
     val nav_version = "2.7.7"
+    val lifecycle_version = "2.8.4"
 
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
     implementation("androidx.navigation:navigation-runtime-ktx:$nav_version")
@@ -62,7 +63,7 @@ dependencies {
 
     val room_version = "2.5.0"
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
     implementation(libs.androidx.core.ktx)
@@ -86,12 +87,25 @@ dependencies {
 
 
     // ViewModel and LiveData
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.49")
     annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+
+    implementation("com.google.dagger:hilt-android:2.49")
+    kapt("com.google.dagger:hilt-android-compiler:2.49")
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 }
 

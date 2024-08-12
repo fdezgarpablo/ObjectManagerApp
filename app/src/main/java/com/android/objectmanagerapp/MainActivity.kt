@@ -10,8 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.android.objectmanagerapp.navigation.AppNavigation
+import com.android.objectmanagerapp.navigation.Screen
 import com.android.objectmanagerapp.ui.theme.ObjectManagerAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var navController : NavHostController? = null
 
@@ -20,10 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ObjectManagerAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     navController = rememberNavController()
-                    AppNavigation(startDestination = "news", navController = navController!!)
-                }
+                    AppNavigation(startDestination = Screen.ObjectList.route, navController = navController!!)
+
             }
         }
     }

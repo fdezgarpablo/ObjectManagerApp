@@ -8,7 +8,7 @@ import com.android.objectmanagerapp.data.source.local.entity.ObjectEntity
 import com.android.objectmanagerapp.data.source.local.entity.RelationEntity
 
 @Database(entities = [ObjectEntity::class, RelationEntity::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
+abstract class ObjectManagerDatabase : RoomDatabase() {
     abstract fun objectDao(): ObjectDao
     abstract fun relationDao(): RelationDao
 }

@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RelationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRelation(relationEntity: RelationEntity)
+    fun insertRelation(relationEntity: RelationEntity)
 
     @Update
-    suspend fun updateRelation(relationEntity: RelationEntity)
+    fun updateRelation(relationEntity: RelationEntity)
 
     @Delete
-    suspend fun deleteRelation(relationEntity: RelationEntity)
+    fun deleteRelation(relationEntity: RelationEntity)
 
     @Query("SELECT * FROM relations WHERE parentObjectId = :parentId")
-    fun getRelationsForParent(parentId: Long): Flow<List<RelationEntity>>
+    fun getRelationsForParent(parentId: Int): Flow<List<RelationEntity>>
 }
