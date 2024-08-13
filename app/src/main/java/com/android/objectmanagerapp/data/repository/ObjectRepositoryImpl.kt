@@ -4,6 +4,7 @@ import com.android.objectmanagerapp.data.mappers.toDataObject
 import com.android.objectmanagerapp.data.mappers.toDataObjectList
 import com.android.objectmanagerapp.data.mappers.toEntity
 import com.android.objectmanagerapp.data.model.DataObject
+import com.android.objectmanagerapp.data.model.Relation
 import com.android.objectmanagerapp.data.source.local.dao.ObjectDao
 import com.android.objectmanagerapp.data.source.local.dao.RelationDao
 import com.android.objectmanagerapp.data.source.local.entity.ObjectEntity
@@ -40,19 +41,19 @@ class ObjectRepositoryImpl @Inject constructor(
         return objectDao.getObjectById(id)?.toDataObject() ?: DataObject()
     }
 
-    override suspend fun insertRelation(relationEntity: RelationEntity) {
-        relationDao.insertRelation(relationEntity)
+    override suspend fun insertRelation(relation: Relation) {
+        relationDao.insertRelation(relation.toEntity())
     }
 
-    override suspend fun updateRelation(relationEntity: RelationEntity) {
-        relationDao.updateRelation(relationEntity)
+    override suspend fun updateRelation(relation: Relation) {
+        relationDao.updateRelation(relation.toEntity())
     }
 
-    override suspend fun deleteRelation(relationEntity: RelationEntity) {
-        relationDao.deleteRelation(relationEntity)
+    override suspend fun deleteRelation(relation: Relation) {
+        relationDao.deleteRelation(relation.toEntity())
     }
 
-    override fun getRelationsForParent(parentId: String): Flow<List<RelationEntity>> {
-        return relationDao.getRelationsForParent(parentId)
+    override fun getRelationsForParent(parentId: String): Flow<List<Relation>> {
+        return relationDao.getRelationsForParent(parentId).map(List<RelationEntity>::toDataObjectList)
     }
 }

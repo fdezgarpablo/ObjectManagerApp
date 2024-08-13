@@ -17,5 +17,4 @@ fun ObjectEntity.toDataObject() = DataObject(
     type = type
 )
 
-fun List<DataObject>.toEntityList() = map(DataObject::toEntity)
 fun List<ObjectEntity>.toDataObjectList() = map(ObjectEntity::toDataObject)

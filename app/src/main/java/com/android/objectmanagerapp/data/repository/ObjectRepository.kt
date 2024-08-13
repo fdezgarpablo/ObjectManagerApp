@@ -1,7 +1,7 @@
 package com.android.objectmanagerapp.data.repository
 
 import com.android.objectmanagerapp.data.model.DataObject
-import com.android.objectmanagerapp.data.source.local.entity.RelationEntity
+import com.android.objectmanagerapp.data.model.Relation
 import kotlinx.coroutines.flow.Flow
 
 interface ObjectRepository {
@@ -18,11 +18,11 @@ interface ObjectRepository {
 
     suspend fun getObjectById(id: String): DataObject
 
-    suspend fun insertRelation(relationEntity: RelationEntity)
+    suspend fun insertRelation(relation: Relation)
 
-    suspend fun updateRelation(relationEntity: RelationEntity)
+    suspend fun updateRelation(relation: Relation)
 
-    suspend fun deleteRelation(relationEntity: RelationEntity)
+    suspend fun deleteRelation(relation: Relation)
 
-    fun getRelationsForParent(parentId: String): Flow<List<RelationEntity>>
+    fun getRelationsForParent(parentId: String): Flow<List<Relation>>
 }

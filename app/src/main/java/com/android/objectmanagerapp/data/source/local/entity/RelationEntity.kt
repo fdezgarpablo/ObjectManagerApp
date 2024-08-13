@@ -24,5 +24,4 @@ import androidx.room.ForeignKey
 data class RelationEntity(
     val parentObjectId: String,
     val childObjectId: String,
-    val relationshipType: String
 )

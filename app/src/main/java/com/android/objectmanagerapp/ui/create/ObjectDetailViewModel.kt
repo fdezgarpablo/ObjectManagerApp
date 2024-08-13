@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.objectmanagerapp.data.model.DataObject
 import com.android.objectmanagerapp.data.model.ModeType
+import com.android.objectmanagerapp.data.model.Relation
 import com.android.objectmanagerapp.data.repository.ObjectRepository
-import com.android.objectmanagerapp.data.source.local.entity.RelationEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -27,8 +28,10 @@ class ObjectDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllObjects().collect { objects ->
-                _state.update {
-                    it.copy(allObjects = objects)
+                withContext(Dispatchers.Main) {
+                    _state.update {
+                        it.copy(allObjects = objects)
+                    }
                 }
             }
         }
@@ -42,11 +45,13 @@ class ObjectDetailViewModel @Inject constructor(
         if (mode != ModeType.CREATE.name && objectId != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 val dataObject = repository.getObjectById(objectId)
-                _state.update { state ->
-                    state.copy(
-                        dataObject = dataObject,
-                        selectedRelations = getExistingRelations(objectId),
-                    )
+                withContext(Dispatchers.Main) {
+                    _state.update { state ->
+                        state.copy(
+                            dataObject = dataObject,
+                            selectedRelations = getExistingRelations(objectId),
+                        )
+                    }
                 }
             }
         }
@@ -76,7 +81,7 @@ class ObjectDetailViewModel @Inject constructor(
                 repository.updateObject(_state.value.dataObject)
                 saveRelations(_state.value.objectId!!)
 
-            } else if (_state.value.mode == ModeType.CREATE.name){
+            } else if (_state.value.mode == ModeType.CREATE.name) {
 
                 val objectId = UUID.randomUUID().toString()
                 repository.insertObject(_state.value.dataObject.apply { id = objectId })
@@ -86,34 +91,33 @@ class ObjectDetailViewModel @Inject constructor(
     }
 
     private fun saveRelations(parentId: String) {
-        val relationsToDelete = _state.value.initialRelations.filter { it !in _state.value.selectedRelations }
+        val relationsToDelete =
+            _state.value.initialRelations.filter { it !in _state.value.selectedRelations }
 
-        _state.value.selectedRelations.forEach { relatedObjectId ->
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            _state.value.selectedRelations.forEach { relatedObjectId ->
                 repository.insertRelation(
-                    RelationEntity(
+                    Relation(
                         parentObjectId = parentId,
                         childObjectId = relatedObjectId,
-                        relationshipType = ""
                     )
                 )
+            }
 
-
-                if (_state.value.mode == ModeType.EDIT.name) {
-                    relationsToDelete.forEach { relationToDelete ->
-                        repository.deleteRelation(
-                            RelationEntity(
-                                parentObjectId = parentId,
-                                childObjectId = relationToDelete,
-                                relationshipType = ""
-                            )
+            if (_state.value.mode == ModeType.EDIT.name) {
+                relationsToDelete.forEach { relationToDelete ->
+                    repository.deleteRelation(
+                        Relation(
+                            parentObjectId = parentId,
+                            childObjectId = relationToDelete,
                         )
-                    }
+                    )
                 }
             }
         }
-
     }
+
 
     private fun updateState(dataObject: DataObject) {
         _state.update { newState ->

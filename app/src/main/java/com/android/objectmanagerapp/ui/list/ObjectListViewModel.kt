@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -55,10 +56,12 @@ class ObjectListViewModel @Inject constructor(
     private fun deleteObject(dataObject: DataObject) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteObject(dataObject)
-            _state.update { currentState ->
-                currentState.copy(
-                    searchQuery = _state.value.searchQuery,
-                )
+            withContext(Dispatchers.Main){
+                _state.update { currentState ->
+                    currentState.copy(
+                        searchQuery = _state.value.searchQuery,
+                    )
+                }
             }
         }
     }
