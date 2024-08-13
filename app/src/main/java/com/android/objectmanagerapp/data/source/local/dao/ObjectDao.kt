@@ -21,8 +21,11 @@ interface ObjectDao {
     fun deleteObject(objectEntity: ObjectEntity)
 
     @Query("SELECT * FROM objects WHERE id = :id")
-    fun getObjectById(id: Int): ObjectEntity?
+    fun getObjectById(id: String): ObjectEntity?
 
-    @Query("SELECT * FROM objects WHERE name LIKE :searchQuery OR type LIKE :searchQuery")
+    @Query("SELECT * FROM objects WHERE name LIKE '%' || :searchQuery || '%' OR description LIKE '%' || :searchQuery || '%'")
     fun getObjects(searchQuery: String): Flow<List<ObjectEntity>>
+
+    @Query("SELECT * FROM objects")
+    fun getAllObjects(): Flow<List<ObjectEntity>>
 }

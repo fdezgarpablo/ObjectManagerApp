@@ -1,8 +1,10 @@
 package com.android.objectmanagerapp.data.model
 
+import java.util.UUID
+
 data class DataObject(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val type: String
+    var id: String = UUID.randomUUID().toString(),
+    var name: String = "",
+    var description: String = "",
+    var type: String = ObjectType.HUMAN.value
 )

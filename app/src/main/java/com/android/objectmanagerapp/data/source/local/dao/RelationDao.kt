@@ -21,5 +21,5 @@ interface RelationDao {
     fun deleteRelation(relationEntity: RelationEntity)
 
     @Query("SELECT * FROM relations WHERE parentObjectId = :parentId")
-    fun getRelationsForParent(parentId: Int): Flow<List<RelationEntity>>
+    fun getRelationsForParent(parentId: String): Flow<List<RelationEntity>>
 }

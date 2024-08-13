@@ -7,7 +7,6 @@ import com.android.objectmanagerapp.data.repository.ObjectRepositoryImpl
 import com.android.objectmanagerapp.data.source.local.ObjectManagerDatabase
 import com.android.objectmanagerapp.data.source.local.dao.ObjectDao
 import com.android.objectmanagerapp.data.source.local.dao.RelationDao
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +37,9 @@ object DatabaseModule {
             context.applicationContext,
             ObjectManagerDatabase::class.java,
             "ObjectManagerDatabase.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

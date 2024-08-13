@@ -12,7 +12,9 @@ interface ObjectRepository {
 
     suspend fun deleteObject(dataObject: DataObject)
 
-    fun getObjects(query: String): Flow<List<DataObject>>
+    suspend fun getAllObjects(): Flow<List<DataObject>>
+
+    suspend fun getObjects(query: String): Flow<List<DataObject>>
 
     suspend fun insertRelation(relationEntity: RelationEntity)
 
@@ -20,5 +22,5 @@ interface ObjectRepository {
 
     suspend fun deleteRelation(relationEntity: RelationEntity)
 
-    fun getRelationsForParent(parentId: Int): Flow<List<RelationEntity>>
+    fun getRelationsForParent(parentId: String): Flow<List<RelationEntity>>
 }

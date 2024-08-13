@@ -1,68 +1,47 @@
 package com.android.objectmanagerapp.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import android.widget.Toast
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import com.android.objectmanagerapp.data.model.DataObject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ObjectItem(
     dataObject: DataObject,
     onEditClick: () -> Unit,
+    onRemove: (DataObject) -> Unit
 ) {
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { }
-            .padding(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = dataObject.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = dataObject.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "Type: ${dataObject.type}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+    val context = LocalContext.current
+    val currentItem by rememberUpdatedState(dataObject)
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            when(it) {
+                SwipeToDismissBoxValue.StartToEnd -> {
+                    onRemove(currentItem)
+                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                }
+                SwipeToDismissBoxValue.EndToStart -> {
+                    return@rememberSwipeToDismissBoxState false
+                }
+                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
             }
-            IconButton(onClick = onEditClick) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Object",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+            return@rememberSwipeToDismissBoxState true
+        },
+        positionalThreshold = { it * .25F }
+    )
+    SwipeToDismissBox(
+        state = dismissState,
+        backgroundContent = { DismissBackground(dismissState)},
+        content = {
+            ObjectCard(dataObject){
+                onEditClick
             }
-        }
-    }
+        })
 }

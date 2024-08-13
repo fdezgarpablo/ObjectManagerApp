@@ -27,8 +27,12 @@ class ObjectRepositoryImpl @Inject constructor(
         objectDao.deleteObject(dataObject.toEntity())
     }
 
-    override fun getObjects(query: String): Flow<List<DataObject>> {
-        return objectDao.getObjects("%$query%").map(List<ObjectEntity>::toDataObjectList)
+    override suspend fun getObjects(query: String): Flow<List<DataObject>> {
+        return objectDao.getObjects(query).map(List<ObjectEntity>::toDataObjectList)
+    }
+
+    override suspend fun getAllObjects(): Flow<List<DataObject>> {
+        return objectDao.getAllObjects().map(List<ObjectEntity>::toDataObjectList)
     }
 
     override suspend fun insertRelation(relationEntity: RelationEntity) {
@@ -43,7 +47,7 @@ class ObjectRepositoryImpl @Inject constructor(
         relationDao.deleteRelation(relationEntity)
     }
 
-    override fun getRelationsForParent(parentId: Int): Flow<List<RelationEntity>> {
+    override fun getRelationsForParent(parentId: String): Flow<List<RelationEntity>> {
         return relationDao.getRelationsForParent(parentId)
     }
 }
