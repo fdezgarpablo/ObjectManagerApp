@@ -54,17 +54,7 @@ android {
 dependencies {
     val nav_version = "2.7.7"
     val lifecycle_version = "2.8.4"
-
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-runtime-ktx:$nav_version")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
     val room_version = "2.5.0"
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -82,10 +72,20 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.google.accompanist:accompanist-swiperefresh:0.30.0")
-
-
-
+    implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.multidex:multidex:2.0.1")
+
+    //Navigation
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-runtime-ktx:$nav_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+   //Room
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
 
     // ViewModel and LiveData
@@ -95,8 +95,6 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
-
-
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.49")

@@ -7,12 +7,18 @@ import androidx.room.ForeignKey
     tableName = "relations",
     primaryKeys = ["parentObjectId", "childObjectId"],
     foreignKeys = [
-        ForeignKey(entity = ObjectEntity::class,
+        ForeignKey(
+            entity = ObjectEntity::class,
             parentColumns = ["id"],
-            childColumns = ["parentObjectId"]),
-        ForeignKey(entity = ObjectEntity::class,
+            childColumns = ["parentObjectId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ObjectEntity::class,
             parentColumns = ["id"],
-            childColumns = ["childObjectId"])
+            childColumns = ["childObjectId"],
+            onDelete = ForeignKey.CASCADE
+        )
     ]
 )
 data class RelationEntity(

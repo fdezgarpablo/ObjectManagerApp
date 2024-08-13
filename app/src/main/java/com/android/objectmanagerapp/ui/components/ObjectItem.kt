@@ -16,7 +16,8 @@ import com.android.objectmanagerapp.data.model.DataObject
 fun ObjectItem(
     dataObject: DataObject,
     onEditClick: () -> Unit,
-    onRemove: (DataObject) -> Unit
+    onRemove: (DataObject) -> Unit,
+    onCardClick: () -> Unit
 ) {
     val context = LocalContext.current
     val currentItem by rememberUpdatedState(dataObject)
@@ -40,8 +41,6 @@ fun ObjectItem(
         state = dismissState,
         backgroundContent = { DismissBackground(dismissState)},
         content = {
-            ObjectCard(dataObject){
-                onEditClick
-            }
+            ObjectCard(dataObject = dataObject, onEditClick = {onEditClick()}, onCardClick = {onCardClick()})
         })
 }

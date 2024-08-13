@@ -1,5 +1,6 @@
 package com.android.objectmanagerapp.data.repository
 
+import com.android.objectmanagerapp.data.mappers.toDataObject
 import com.android.objectmanagerapp.data.mappers.toDataObjectList
 import com.android.objectmanagerapp.data.mappers.toEntity
 import com.android.objectmanagerapp.data.model.DataObject
@@ -33,6 +34,10 @@ class ObjectRepositoryImpl @Inject constructor(
 
     override suspend fun getAllObjects(): Flow<List<DataObject>> {
         return objectDao.getAllObjects().map(List<ObjectEntity>::toDataObjectList)
+    }
+
+    override suspend fun getObjectById(id: String): DataObject {
+        return objectDao.getObjectById(id)?.toDataObject() ?: DataObject()
     }
 
     override suspend fun insertRelation(relationEntity: RelationEntity) {

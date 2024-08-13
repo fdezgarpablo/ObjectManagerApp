@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.objectmanagerapp.data.model.ModeType
 import com.android.objectmanagerapp.ui.components.ObjectItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +36,7 @@ import com.android.objectmanagerapp.ui.components.ObjectItem
 fun ObjectListView(
     onAddObjectClick: () -> Unit,
     onEditObjectClick: (String) -> Unit,
+    onCardClick: (String) ->Unit
 ) {
     val viewModel = hiltViewModel<ObjectListViewModel>()
     val viewState = viewModel.state.collectAsStateWithLifecycle()
@@ -42,17 +45,28 @@ fun ObjectListView(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddObjectClick,
-                contentColor = Color.Black,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Object")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Object"
+                )
             }
         },
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Objects") },
+            CenterAlignedTopAppBar(
+                title = {
+
+                    Text(
+                        text = "Objects",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = MaterialTheme.colorScheme.primary,
                 )
             )
         },
@@ -67,26 +81,32 @@ fun ObjectListView(
                 value = viewState.value.searchQuery,
                 onValueChange = {
                     viewState.value.updateSearchQuery(it)
-                                },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 placeholder = { Text(text = "Search...") },
                 leadingIcon = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Icon",
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    focusedContainerColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 shape = RoundedCornerShape(24.dp)
             )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
-                    .fillMaxSize().padding(horizontal = 16.dp)
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
             ) {
                 itemsIndexed(
                     items = viewState.value.objects,
@@ -95,7 +115,8 @@ fun ObjectListView(
                     ObjectItem(
                         dataObject = dataObject,
                         onEditClick = { onEditObjectClick(dataObject.id) },
-                        onRemove = {viewState.value.deleteObject(dataObject)}
+                        onRemove = { viewState.value.deleteObject(dataObject) },
+                        onCardClick = {onCardClick(dataObject.id)}
                     )
                 }
             }

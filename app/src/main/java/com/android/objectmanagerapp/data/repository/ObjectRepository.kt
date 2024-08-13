@@ -16,6 +16,8 @@ interface ObjectRepository {
 
     suspend fun getObjects(query: String): Flow<List<DataObject>>
 
+    suspend fun getObjectById(id: String): DataObject
+
     suspend fun insertRelation(relationEntity: RelationEntity)
 
     suspend fun updateRelation(relationEntity: RelationEntity)
